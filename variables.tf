@@ -4,6 +4,10 @@ variable "ebs_count" {
   default = "2"
 }
 
+variable "ebs_size" {
+  default = [2]
+}
+
 variable "want_eip" {
   default = "0"
 }

@@ -92,7 +92,7 @@ resource "aws_eip_association" "this" {
 
 resource "aws_ebs_volume" "this" {
   availability_zone = "${data.aws_instance.this.availability_zone}"
-  size              = 2
+  size              = "${element(var.ebs_size,count.index)}"
   count             = "${var.ebs_count}"
 
   tags {
