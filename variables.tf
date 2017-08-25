@@ -1,7 +1,7 @@
 variable "instance_name" {}
 
 variable "ebs_count" {
-  default = "2"
+  default = "0"
 }
 
 variable "ebs_size" {
@@ -26,4 +26,8 @@ variable "public_name" {
 
 output "eip" {
   value = "${aws_eip.this.public_ip}"
+}
+
+output "private_ip" {
+  value = "${data.aws_instance.this.private_ip}"
 }
