@@ -80,7 +80,16 @@ resource "aws_route53_record" "public" {
   name    = "${var.public_name}.${data.aws_route53_zone.public.name}"
   type    = "A"
   ttl     = "60"
-  records = ["${var.want_eip ? aws_eip.this.public_ip : data.aws_instance.this.public_ip}"]
+  records = ["${aws_eip.this.public_ip}"]
+  count   = "${var.want_eip}"
+}
+
+resource "aws_route53_record" "public_instance" {
+  zone_id = "${data.aws_route53_zone.public.zone_id}"
+  name    = "${var.public_name}.${data.aws_route53_zone.public.name}"
+  type    = "A"
+  ttl     = "60"
+  records = ["${ data.aws_instance.this.public_ip}"]
   count   = "${var.public_name == "" ? 0 : 1}"
 }
 
