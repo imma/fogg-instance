@@ -32,6 +32,10 @@ output "private_ip" {
   value = "${data.aws_instance.this.private_ip}"
 }
 
+output "instance_id" {
+  value = "${data.aws_instance.this.id}"
+}
+
 output "az" {
   value = "${data.aws_instance.this.availability_zone}"
 }
