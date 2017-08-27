@@ -80,8 +80,8 @@ resource "aws_route53_record" "public" {
   name    = "${var.public_name}.${data.aws_route53_zone.public.name}"
   type    = "A"
   ttl     = "60"
-  records = ["${aws_eip.this.public_ip}"]
-  count   = "${var.want_eip}"
+  records = ["${coalesce(aws_eip.this.public_ip,data.aws_instance.this.public_ip)}"]
+  count   = "${var.public_name == "" ? 0 : 1}"
 }
 
 resource "aws_eip_association" "this" {
