@@ -90,7 +90,7 @@ resource "aws_route53_record" "public_instance" {
   type    = "A"
   ttl     = "60"
   records = ["${ data.aws_instance.this.public_ip}"]
-  count   = "${var.public_name == "" ? 0 : 1}"
+  count   = "${var.public_name == "" ? 0 : (var.want_eip ? 0 : 1)}"
 }
 
 resource "aws_eip_association" "this" {
