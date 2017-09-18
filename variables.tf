@@ -24,6 +24,11 @@ variable "public_name" {
   default = ""
 }
 
+variable "remote_org_path" {}
+variable "remote_env_path" {}
+variable "remote_app_path" {}
+variable "remote_service_path" {}
+
 output "eip" {
   value = "${aws_eip.this.public_ip}"
 }
