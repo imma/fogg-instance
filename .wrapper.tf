@@ -2,20 +2,31 @@ module "instance" {
   source = "git@github.com:imma/fogg-instance"
 
   global_bucket = "${var.remote_bucket}"
-  global_key    = "${join("_",slice(split("_",var.remote_path),0,1))}/terraform.tfstate"
+  global_key    = "${var.remote_org_path}"
   global_region = "${var.remote_region}"
 
   env_bucket = "${var.remote_bucket}"
-  env_key    = "${join("_",slice(split("_",var.remote_path),0,2))}/terraform.tfstate"
+  env_key    = "${var.remote_env_path}"
   env_region = "${var.remote_region}"
 
   app_bucket = "${var.remote_bucket}"
-  app_key    = "${join("_",slice(split("_",var.remote_path),0,3))}/terraform.tfstate"
+  app_key    = "${var.remote_app_path}"
   app_region = "${var.remote_region}"
 
   service_bucket = "${var.remote_bucket}"
-  service_key    = "${join("_",slice(split("_",var.remote_path),0,4))}/terraform.tfstate"
+  service_key    = "${var.remote_service_path}"
   service_region = "${var.remote_region}"
+}
+
+data "terraform_remote_state" "org" {
+  backend = "s3"
+
+  config {
+    bucket         = "${var.remote_bucket}"
+    key            = "${var.remote_org_path}"
+    region         = "${var.remote_region}"
+    dynamodb_table = "terraform_state_lock"
+  }
 }
 
 data "terraform_remote_state" "env" {
@@ -23,7 +34,7 @@ data "terraform_remote_state" "env" {
 
   config {
     bucket         = "${var.remote_bucket}"
-    key            = "${join("_",slice(split("_",var.remote_path),0,2))}/terraform.tfstate"
+    key            = "${var.remote_env_path}"
     region         = "${var.remote_region}"
     dynamodb_table = "terraform_state_lock"
   }
@@ -34,7 +45,7 @@ data "terraform_remote_state" "app" {
 
   config {
     bucket         = "${var.remote_bucket}"
-    key            = "${join("_",slice(split("_",var.remote_path),0,3))}/terraform.tfstate"
+    key            = "${var.remote_app_path}"
     region         = "${var.remote_region}"
     dynamodb_table = "terraform_state_lock"
   }
@@ -45,7 +56,7 @@ data "terraform_remote_state" "service" {
 
   config {
     bucket         = "${var.remote_bucket}"
-    key            = "${join("_",slice(split("_",var.remote_path),0,4))}/terraform.tfstate"
+    key            = "${var.remote_service_path}"
     region         = "${var.remote_region}"
     dynamodb_table = "terraform_state_lock"
   }
