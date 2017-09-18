@@ -1,6 +1,6 @@
-variable "global_bucket" {}
-variable "global_key" {}
-variable "global_region" {}
+variable "org_bucket" {}
+variable "org_key" {}
+variable "org_region" {}
 
 variable "env_bucket" {}
 variable "env_key" {}
@@ -14,13 +14,13 @@ variable "service_bucket" {}
 variable "service_key" {}
 variable "service_region" {}
 
-data "terraform_remote_state" "global" {
+data "terraform_remote_state" "org" {
   backend = "s3"
 
   config {
-    bucket         = "${var.global_bucket}"
-    key            = "${var.global_key}"
-    region         = "${var.global_region}"
+    bucket         = "${var.org_bucket}"
+    key            = "${var.org_key}"
+    region         = "${var.org_region}"
     dynamodb_table = "terraform_state_lock"
   }
 }
@@ -66,7 +66,7 @@ data "aws_instance" "this" {
 }
 
 data "aws_route53_zone" "public" {
-  name         = "${coalesce(var.public_zone,data.terraform_remote_state.global.domain_name)}"
+  name         = "${coalesce(var.public_zone,data.terraform_remote_state.org.domain_name)}"
   private_zone = false
 }
 
